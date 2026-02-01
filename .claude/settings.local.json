@@ -8,7 +8,8 @@
       "mcp__neon__describe_project",
       "mcp__neon__list_branch_computes",
       "mcp__neon__run_sql_transaction",
-      "mcp__neon__get_connection_string"
+      "mcp__neon__get_connection_string",
+      "Bash(npx shadcn@latest add:*)"
     ]
   }
 }
