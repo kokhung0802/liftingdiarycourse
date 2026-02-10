@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { Dumbbell } from "lucide-react";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -49,40 +50,59 @@ export default async function DashboardPage({
               <p className="text-muted-foreground text-center">
                 No workouts logged for this date.
               </p>
-              <Button className="mt-4">Log a Workout</Button>
+              <Button className="mt-4" asChild>
+                <Link href={`/dashboard/workout/new?date=${selectedDate}`}>
+                  Log a Workout
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         ) : (
           workouts.map((workout) =>
-            workout.exercises.map((exercise) => (
-              <Card key={exercise.id}>
+            workout.exercises.length === 0 ? (
+              <Card key={workout.id}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg">
-                    {exercise.exercise.name}
-                  </CardTitle>
-                  <CardDescription>
-                    {exercise.sets.length} sets logged
-                  </CardDescription>
+                  <CardTitle className="text-lg">{workout.name}</CardTitle>
+                  <CardDescription>No exercises added yet</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {exercise.sets.map((set) => (
-                      <div
-                        key={set.id}
-                        className="bg-muted flex items-center justify-between rounded-md px-3 py-2 text-sm"
-                      >
-                        <span className="text-muted-foreground font-medium">
-                          Set {set.setNumber}
-                        </span>
-                        <span>
-                          {set.weight} lbs x {set.reps} reps
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                <CardContent className="flex flex-col items-center py-4">
+                  <Dumbbell className="text-muted-foreground mb-2 h-8 w-8" />
+                  <p className="text-muted-foreground mb-3 text-sm">
+                    Start adding exercises to this workout.
+                  </p>
                 </CardContent>
               </Card>
-            ))
+            ) : (
+              workout.exercises.map((exercise) => (
+                <Card key={exercise.id}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg">
+                      {exercise.exercise.name}
+                    </CardTitle>
+                    <CardDescription>
+                      {exercise.sets.length} sets logged
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {exercise.sets.map((set) => (
+                        <div
+                          key={set.id}
+                          className="bg-muted flex items-center justify-between rounded-md px-3 py-2 text-sm"
+                        >
+                          <span className="text-muted-foreground font-medium">
+                            Set {set.setNumber}
+                          </span>
+                          <span>
+                            {set.weight} lbs x {set.reps} reps
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )
           )
         )}
       </div>
